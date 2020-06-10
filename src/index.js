@@ -4,28 +4,21 @@ import "normalize.css";
 import "./index.css";
 
 import api from "./api";
-import shoppingList from "./shopping-list";
 import store from "./store";
+import shoppingList from "./shopping-list";
 
 const main = function () {
-  api
-    .getItems()
+  api.getItems()
     .then((res) => res.json())
     .then((items) => {
       items.forEach((item) => store.addItem(item));
       shoppingList.render();
+      
+      const item = store.items[0];
+      console.log('current name: ' + item.name);
+      store.findAndUpdate(item.id, { name: 'barbaz' });
+      console.log('new name: ' + item.name);
     });
-  api
-    .createItem("pears")
-    .then((res) => res.json())
-    .then((newItem) => {
-      return api.getItems();
-    })
-    .then((res) => res.json())
-    .then((items) => {
-      console.log(items);
-    });
-  api.getItems().then((res) => res.json());
   shoppingList.bindEventListeners();
   shoppingList.render();
 };
